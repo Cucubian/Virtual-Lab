@@ -2,10 +2,11 @@ const mysql = require('mysql2/promise');
 require('dotenv').config();
 
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'localhost',
+  host: process.env.DB_HOST || 'ballast.proxy.rlwy.net',
   user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '123456',
+  password: process.env.DB_PASSWORD || 'CcdWkkzGYCnxARfUKiTkqytjRKrcGfsW',
   database: process.env.DB_NAME || 'virtual_science_lab',
+  port: process.env.DB_PORT || 25679,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
