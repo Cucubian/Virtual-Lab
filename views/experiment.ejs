@@ -1,0 +1,203 @@
+<%- include('partials/header') %>
+
+<div class="breadcrumb container py-10 text-sm font-semibold tracking-wide flex items-center gap-3">
+    <a href="/" class="text-primary hover:underline flex items-center gap-1 opacity-70 hover:opacity-100 transition-opacity">🏠 Trang chủ</a> 
+    <span class="text-slate-300">/</span> 
+    <a href="/subject/<%= subject.id %>" class="text-primary hover:underline flex items-center gap-1 opacity-70 hover:opacity-100 transition-opacity"><%= subject.icon %> <%= subject.name %></a>
+    <span class="text-slate-300">/</span> 
+    <span class="text-slate-800 bg-white/50 px-3 py-1 rounded-lg border border-slate-100 shadow-sm"><%= experiment.title %></span>
+</div>
+
+<section class="lab-workstation container pb-24">
+    <div class="lab-header flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-8 px-4">
+        <div class="title-group animate-fade-in">
+            <span class="subject-tag inline-flex px-4 py-1 bg-indigo-50 text-indigo-700 rounded-full font-black text-[10px] mb-4 border border-indigo-100 uppercase tracking-widest shadow-sm"><%= subject.icon %> <%= subject.name %></span>
+            <h1 class="text-5xl md:text-6xl font-black text-slate-900 tracking-tight leading-none"><%= experiment.title %></h1>
+        </div>
+        <div class="tab-controls flex gap-2 bg-slate-100/80 p-1.5 rounded-[22px] backdrop-blur-sm self-stretch md:self-auto shadow-inner">
+            <button class="tab-btn px-8 py-3.5 rounded-2xl font-black transition-all duration-300 [&.active]:bg-white [&.active]:text-primary [&.active]:shadow-[0_10px_20px_-5px_rgba(79,70,229,0.15)] text-text-muted hover:text-primary" data-tab="simulation">🔬 Mô phỏng</button>
+            <button class="tab-btn px-8 py-3.5 rounded-2xl font-black transition-all duration-300 [&.active]:bg-white [&.active]:text-primary [&.active]:shadow-[0_10px_20px_-5px_rgba(79,70,229,0.15)] text-text-muted hover:text-primary" data-tab="theory">📖 Lý thuyết</button>
+            <button class="tab-btn px-8 py-3.5 rounded-2xl font-black transition-all duration-300 [&.active]:bg-white [&.active]:text-primary [&.active]:shadow-[0_10px_20px_-5px_rgba(79,70,229,0.15)] text-text-muted hover:text-primary" data-tab="quiz">📝 Trắc nghiệm</button>
+        </div>
+    </div>
+
+    <div class="lab-main-grid min-h-[800px] px-2 shadow-2xl shadow-indigo-100/50 relative">
+        <!-- SIMULATION TAB -->
+        <div id="simulation-tab" class="tab-content hidden [&.active]:block h-full animate-fade-in">
+            <div class="lab-layout grid grid-cols-1 lg:grid-cols-[320px_1fr_340px] gap-8 h-full">
+                <!-- Left Panel: Tools & Params -->
+                <aside class="panel controls-panel glass-card p-10 flex flex-col gap-12 overflow-y-auto">
+                    <div class="panel-section">
+                        <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8 pb-4 border-b border-slate-100 flex items-center justify-between">
+                            Thông số thực nghiệm <span class="text-lg">⚙️</span>
+                        </h3>
+                        <div id="params-container" class="space-y-10">
+                            <!-- Injected by experiment JS -->
+                        </div>
+                    </div>
+                    <div class="panel-section mt-auto">
+                        <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100/50">
+                            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Mẹo quan sát</h3>
+                            <p class="text-xs text-text-muted leading-relaxed">Hãy thay đổi các thông số và nhấn "Bắt đầu" để quan sát sự biến đổi quy luật khoa học.</p>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Center: Canvas Area -->
+                <div class="canvas-area flex flex-col glass-card shadow-indigo-100/30 overflow-hidden relative border-none">
+                    <div class="canvas-top p-6 flex justify-between items-center bg-white/50 backdrop-blur-md border-b border-slate-100 relative z-20">
+                        <div class="flex items-center gap-3">
+                            <div class="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-green-200 shadow-lg"></div>
+                            <span class="status-indicator text-xs font-black text-slate-500 tracking-widest uppercase" id="experiment-status">Đã sẵn sàng</span>
+                        </div>
+                    </div>
+                    
+                    <div class="canvas-wrapper flex-grow bg-slate-50/50 relative overflow-hidden flex items-center justify-center cursor-crosshair">
+                        <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(#000 0.5px, transparent 0.5px); background-size: 20px 20px;"></div>
+                        <canvas id="labCanvas" width="800" height="500" class="max-w-[calc(100%-40px)] max-h-[calc(100%-40px)] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)] bg-white rounded-xl border border-slate-100/50 transition-transform duration-500 hover:scale-[1.01]"></canvas>
+                    </div>
+                    
+                    <div class="lab-controls p-10 flex gap-6 justify-center bg-white/80 backdrop-blur-md border-t border-slate-100">
+                        <button id="start-btn" class="btn btn-primary px-14 py-4 text-lg transform hover:scale-102 hover:-translate-y-1 active:scale-95 transition-all shadow-2xl">Bắt đầu mô phỏng</button>
+                        <button id="reset-btn" class="btn bg-slate-100 text-slate-600 px-14 py-4 text-lg hover:bg-slate-200 active:scale-95 transition-all">Đặt lại từ đầu</button>
+                    </div>
+                </div>
+
+                <!-- Right Panel: Instructions & Theory -->
+                <aside class="panel info-panel glass-card p-10 flex flex-col gap-10 overflow-y-auto">
+                    <div class="info-section">
+                        <h3 class="text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em] mb-6 flex items-center gap-3"><span class="bg-indigo-100 w-8 h-8 rounded-lg flex items-center justify-center text-lg">🎯</span> Mục tiêu</h3>
+                        <p class="text-sm leading-[1.8] text-slate-800 font-medium bg-slate-50/50 p-6 rounded-2xl border border-slate-100/50 shadow-sm"><%= experiment.goal %></p>
+                    </div>
+                    
+                    <div class="info-group space-y-8">
+                        <div class="info-section">
+                            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-3"><span class="text-lg">📖</span> Lý thuyết cốt lõi</h3>
+                            <p class="text-[13px] leading-relaxed text-text-muted px-2 font-medium"><%= experiment.theory %></p>
+                        </div>
+                        <div class="info-section">
+                            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-3"><span class="text-lg">📝</span> Hướng dẫn các bước</h3>
+                            <p class="text-[13px] leading-relaxed text-text-muted px-2 font-medium"><%= experiment.instructions %></p>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <!-- THEORY TAB -->
+        <div id="theory-tab" class="tab-content hidden [&.active]:block h-full animate-fade-in py-12">
+            <div class="theory-container max-w-5xl mx-auto glass-card p-12 md:p-20 shadow-2xl">
+                <div class="theory-content-wrapper">
+                    <div class="flex items-center gap-4 mb-10 pb-6 border-b-2 border-slate-100">
+                        <div class="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center text-3xl shadow-inner">📖</div>
+                        <div>
+                            <h2 class="text-4xl font-black text-slate-900 tracking-tight">Cơ sở Lý thuyết</h2>
+                            <p class="text-text-muted font-medium">Tìm hiểu kiến thức nền tảng của thí nghiệm bài học</p>
+                        </div>
+                    </div>
+                    <div class="theory-body prose prose-indigo max-w-none">
+                        <%- experiment.theoryDetailed || `<div class="p-12 text-center text-slate-400">Đang cập nhật nội dung lý thuyết chi tiết...</div>` %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUIZ TAB -->
+        <div id="quiz-tab" class="tab-content hidden [&.active]:block h-full animate-fade-in py-12">
+            <div id="quiz-container" class="max-w-4xl mx-auto glass-card p-12 md:p-20 shadow-2xl overflow-hidden relative">
+                <div id="quiz-intro" class="text-center space-y-10 py-10">
+                    <div class="relative inline-block">
+                        <div class="w-28 h-28 bg-indigo-600 rounded-[32px] flex items-center justify-center text-5xl shadow-[0_20px_40px_-10px_rgba(79,70,229,0.4)] animate-bounce-slow">📝</div>
+                        <div class="absolute -top-4 -right-4 w-12 h-12 bg-white rounded-2xl shadow-xl flex items-center justify-center text-xl animate-pulse">✨</div>
+                    </div>
+                    <div class="space-y-4">
+                        <h2 class="text-5xl font-black text-slate-900 tracking-tight">Sẵn sàng kiểm tra?</h2>
+                        <p class="text-xl text-text-muted font-medium max-w-xl mx-auto">Vận dụng các kiến thức bạn vừa quan sát được để hoàn thành bộ câu hỏi trắc nghiệm dưới đây.</p>
+                    </div>
+                    <div class="pt-6">
+                        <button id="start-quiz-btn" class="group relative px-12 py-6 bg-slate-900 text-white rounded-3xl font-black text-xl transition-all duration-300 hover:bg-primary hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.4)] hover:-translate-y-1 active:scale-95">
+                            Bắt đầu làm bài
+                            <span class="inline-block ml-3 transition-transform group-hover:translate-x-2">→</span>
+                        </button>
+                    </div>
+                    <div class="flex items-center justify-center gap-8 pt-10 border-t border-slate-100 text-sm font-bold text-slate-400 uppercase tracking-widest">
+                        <span>Số câu: <%= (experiment.quiz || []).length %> câu</span>
+                        <div class="w-1 h-1 bg-slate-300 rounded-full"></div>
+                        <span>Độ khó: Cơ bản</span>
+                    </div>
+                </div>
+                <div id="quiz-questions" class="hidden">
+                    <!-- Injected by quizEngine.js -->
+                </div>
+                <div id="quiz-results" class="hidden">
+                    <!-- Result summary -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Essential Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Engine & Scripts -->
+<script src="/js/canvasEngine.js"></script>
+<script src="/js/quizEngine.js"></script>
+<script src="/js/experiments/<%= experiment.jsModule %>"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Tab System
+        const tabs = document.querySelectorAll('.tab-btn');
+        const contents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.dataset.tab;
+                switchTab(target);
+            });
+        });
+
+        function switchTab(target) {
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
+            const activeTabBtn = document.querySelector(`.tab-btn[data-tab="${target}"]`);
+            if (activeTabBtn) activeTabBtn.classList.add('active');
+            const activeContent = document.getElementById(`${target}-tab`);
+            if (activeContent) activeContent.classList.add('active');
+            
+            sessionStorage.setItem('activeTab', target);
+        }
+
+        // Persistent Tab or Hash
+        const savedTab = sessionStorage.getItem('activeTab');
+        if (location.hash === '#quiz') {
+            switchTab('quiz');
+        } else if (savedTab) {
+            switchTab(savedTab);
+        } else {
+            switchTab('simulation');
+        }
+
+        // Initialize Experiment
+        if (typeof initExperiment === 'function') {
+            initExperiment('labCanvas');
+        }
+
+        // Initialize Quiz
+        const quizData = <%- JSON.stringify(experiment.quiz || []) %>;
+        if (window.QuizEngine && quizData.length > 0) {
+            new QuizEngine({
+                questions: quizData,
+                containerId: 'quiz-questions',
+                resultsId: 'quiz-results',
+                introId: 'quiz-intro',
+                startBtnId: 'start-quiz-btn',
+                experimentId: '<%= experiment.id %>'
+            });
+        }
+    });
+</script>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,125 @@
+<%- include('../partials/header') %>
+
+<div class="container py-12 px-6">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+        <div class="flex items-center gap-4">
+            <div class="p-4 bg-amber-500 text-white rounded-2xl shadow-xl shadow-amber-100 flex items-center justify-center text-3xl">📝</div>
+            <div>
+                <h1 class="text-4xl font-black text-slate-800 tracking-tight">Quản lý Trắc nghiệm</h1>
+                <p class="text-text-muted font-medium">Tạo và chỉnh sửa nội dung kiểm tra kiến thức cho học sinh.</p>
+            </div>
+        </div>
+        <button onclick="document.getElementById('add-quiz-panel').classList.toggle('hidden')" class="btn btn-primary px-10 py-4 shadow-xl shadow-indigo-100">
+            ➕ Thêm câu hỏi mới
+        </button>
+    </div>
+
+    <!-- Alert Messages (Optional but Good) -->
+    
+    <!-- Add Quiz Form Panel (Hidden by Default) -->
+    <div id="add-quiz-panel" class="hidden glass-card p-12 mb-12 shadow-2xl border-none animate-fade-in relative">
+        <button onclick="document.getElementById('add-quiz-panel').classList.add('hidden')" class="absolute top-8 right-8 text-slate-400 hover:text-red-500 font-black">✖️ Đóng</button>
+        <h2 class="text-2xl font-black text-slate-800 mb-8 border-b border-slate-50 pb-4">📝 Tạo câu hỏi trắc nghiệm mới</h2>
+        <form action="/admin/quizzes/add" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="space-y-6">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Chọn thí nghiệm tương ứng</label>
+                    <select name="experiment_id" required class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none font-bold text-slate-700">
+                        <% experiments.forEach(exp => { %>
+                            <option value="<%= exp.id %>"><%= exp.title %></option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Nội dung câu hỏi</label>
+                    <textarea name="question" required rows="4" class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 font-medium text-slate-700" placeholder="VD: Công thức tính diện tích hình tròn là..."></textarea>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Đáp án ĐÚNG</label>
+                    <select name="correct_option" required class="w-full px-6 py-4 bg-emerald-50 border border-emerald-100/50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 text-emerald-700 font-bold uppercase tracking-widest">
+                        <option value="A">Đáp án A</option>
+                        <option value="B">Đáp án B</option>
+                        <option value="C">Đáp án C</option>
+                        <option value="D">Đáp án D</option>
+                    </select>
+                </div>
+            </div>
+            <div class="space-y-6">
+                <div class="grid grid-cols-1 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Phương án A</label>
+                        <input type="text" name="option_a" required class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20" placeholder="Phương án A...">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Phương án B</label>
+                        <input type="text" name="option_b" required class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20" placeholder="Phương án B...">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Phương án C</label>
+                        <input type="text" name="option_c" required class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20" placeholder="Phương án C...">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Phương án D</label>
+                        <input type="text" name="option_d" required class="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20" placeholder="Phương án D...">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-full py-5 text-lg mt-4 shadow-xl shadow-indigo-100">
+                    🚀 Lưu câu hỏi vào hệ thống
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Quiz List Table -->
+    <div class="glass-card shadow-xl overflow-hidden animate-fade-in border-none">
+       <div class="overflow-x-auto">
+           <table class="w-full text-left border-collapse">
+               <thead>
+                   <tr class="bg-slate-50/50 border-b border-slate-100">
+                       <th class="p-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">ID</th>
+                       <th class="p-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Thí nghiệm</th>
+                       <th class="p-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Câu hỏi</th>
+                       <th class="p-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Đáp án đúng</th>
+                       <th class="p-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Hành động</th>
+                   </tr>
+               </thead>
+               <tbody class="divide-y divide-slate-100">
+                   <% quizzes.forEach(quiz => { %>
+                       <tr class="hover:bg-indigo-50/30 transition-colors group">
+                           <td class="p-6 text-xs font-bold text-slate-400">#<%= quiz.id %></td>
+                           <td class="p-6">
+                               <span class="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-black uppercase tracking-tighter">
+                                   <%= quiz.experiment_id %>
+                               </span>
+                           </td>
+                           <td class="p-6">
+                               <p class="font-bold text-slate-800 line-clamp-1"><%= quiz.question %></p>
+                           </td>
+                           <td class="p-6">
+                               <span class="w-8 h-8 flex items-center justify-center bg-emerald-500 text-white rounded-lg font-black text-xs shadow-lg shadow-emerald-100">
+                                   <%= quiz.correct_option %>
+                               </span>
+                           </td>
+                           <td class="p-6">
+                               <div class="flex items-center gap-3">
+                                   <button onclick="alert('Tính năng Sửa đang hoàn thiện thêm UI. Bạn có thể Xóa and tạo mới nhanh hơn ngay lúc này!')" class="w-10 h-10 bg-slate-100 text-slate-400 flex items-center justify-center rounded-xl hover:bg-amber-500 hover:text-white transition-all shadow-sm">⚙️</button>
+                                   <a href="/admin/quizzes/delete/<%= quiz.id %>" onclick="return confirm('Bạn chắc chắn muốn xóa câu hỏi này?')" class="w-10 h-10 bg-slate-100 text-slate-400 flex items-center justify-center rounded-xl hover:bg-red-500 hover:text-white transition-all shadow-sm">🗑️</a>
+                               </div>
+                           </td>
+                       </tr>
+                   <% }); %>
+                   <% if (quizzes.length === 0) { %>
+                       <tr>
+                           <td colspan="5" class="p-20 text-center">
+                               <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center text-3xl mx-auto mb-6">📭</div>
+                               <p class="text-text-muted font-medium">Chưa có câu hỏi nào trong cơ sở dữ liệu.</p>
+                           </td>
+                       </tr>
+                   <% } %>
+               </tbody>
+           </table>
+       </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,49 @@
+<%- include('partials/header') %>
+
+<!-- Backdrop Decorations -->
+<div class="fixed inset-0 -z-10 pointer-events-none opacity-20">
+    <div class="absolute top-[20%] left-[-5%] w-[400px] h-[400px] bg-blue-100 blur-[120px] rounded-full"></div>
+    <div class="absolute bottom-[10%] right-[-5%] w-[400px] h-[400px] bg-indigo-100 blur-[120px] rounded-full"></div>
+</div>
+
+<div class="breadcrumb container py-10 text-sm font-semibold tracking-wide flex items-center gap-3">
+    <a href="/" class="text-primary hover:underline flex items-center gap-1 opacity-70 hover:opacity-100 transition-opacity">🏠 Trang chủ</a> 
+    <span class="text-slate-300">/</span> 
+    <span class="text-slate-800 bg-white/50 px-3 py-1 rounded-lg border border-slate-100 shadow-sm"><%= subject.name %></span>
+</div>
+
+<section class="container pb-32">
+    <div class="page-header text-center mb-20 animate-fade-in px-4">
+        <span class="subject-tag inline-flex px-6 py-2 bg-indigo-50 text-indigo-700 rounded-full font-black text-xs mb-6 border border-indigo-100 uppercase tracking-widest shadow-sm"><%= subject.icon %> <%= subject.name %></span>
+        <h1 class="text-5xl md:text-7xl font-black mb-6 tracking-tight text-slate-900 leading-[1.2]">Thư viện <br/><span class="bg-gradient-to-r from-indigo-600 to-indigo-400 bg-clip-text text-transparent">Thí nghiệm <%= subject.name %></span></h1>
+        <p class="text-xl text-text-muted max-w-2xl mx-auto leading-relaxed font-medium">Hàng loạt các mô phỏng trực quan giúp bạn hiểu sâu sắc bản chất khoa học.</p>
+    </div>
+
+    <div class="experiment-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 px-4">
+        <% experiments.forEach((exp, index) => { %>
+            <div class="experiment-card glass-card hover-lift flex flex-col group animate-fade-in" style="animation-delay: <%= index * 0.1 %>s">
+                <div class="experiment-badge absolute top-6 right-6 bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-[11px] font-black text-primary border border-primary shadow-lg uppercase tracking-widest z-10 scale-90 origin-right">MÔ PHỎNG</div>
+                
+                <div class="experiment-preview h-60 bg-gradient-to-br from-slate-50 to-indigo-50 flex items-center justify-center text-8xl relative overflow-hidden group-hover:bg-indigo-100/50 transition-colors duration-500">
+                    <span class="exp-icon relative z-10 drop-shadow-2xl group-hover:scale-125 group-hover:rotate-6 transition-transform duration-700 opacity-90"><%= subject.icon %></span>
+                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(79,70,229,0.08),transparent)] scale-0 group-hover:scale-150 transition-transform duration-1000"></div>
+                </div>
+                
+                <div class="experiment-content p-10 flex flex-col flex-grow bg-white">
+                    <div class="mb-8 space-y-3">
+                        <h3 class="text-3xl font-black text-slate-800 group-hover:text-primary transition-colors"><%= exp.title %></h3>
+                        <p class="text-text-muted leading-relaxed font-medium line-clamp-3"><%= exp.description %></p>
+                    </div>
+                    <div class="mt-auto pt-6 border-t border-slate-50 flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-tighter">Học sinh THCS • Khám phá</span>
+                        <a href="/experiment/<%= exp.id %>" class="btn btn-primary px-8 py-3.5 group/btn rounded-2xl shadow-xl shadow-indigo-100">
+                            Thực hành <span class="group-hover/btn:translate-x-1.5 transition-transform duration-300">→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+</section>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,100 @@
+<%- include('../partials/header') %>
+
+<div class="main-container min-h-screen flex items-center justify-center py-12 px-6 bg-[#f8fafc]">
+    <div class="w-full max-w-md text-center">
+        <div class="bg-white rounded-[40px] border border-slate-100 shadow-2xl shadow-slate-200/50 p-10 space-y-8 animate-fade-in relative overflow-hidden">
+            <!-- Background Decoration -->
+            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-amber-50 rounded-full blur-3xl opacity-50"></div>
+            
+            <div class="relative">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <span class="px-3 py-1 bg-amber-50 text-amber-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-amber-100/50 shadow-sm">⚡ Xác thực</span>
+                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                </div>
+                <h1 class="text-4xl font-black text-slate-800 tracking-tight leading-none mb-3 italic">Nhập mã <span class="text-amber-500">OTP</span></h1>
+                <p class="text-slate-500 font-medium text-sm leading-relaxed max-w-xs mx-auto text-center">Chúng tôi đã gửi mã xác thực gồm 6 chữ số đến email của bạn. Vui lòng kiểm tra hộp thư đến.</p>
+            </div>
+
+            <% if (locals.error) { %>
+                <div class="p-4 bg-red-50 text-red-500 rounded-2xl text-xs font-bold border border-red-100 flex items-center gap-3 text-left">
+                    <span>⚠️</span> <%= error %>
+                </div>
+            <% } %>
+
+            <form action="/auth/verify-otp" method="POST" class="space-y-6 relative">
+                <input type="hidden" name="email" id="emailInput" value="<%= email %>">
+                <div class="space-y-4">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block text-left ml-4">Mã OTP (6 chữ số)</label>
+                    <div class="flex justify-center gap-4">
+                        <input type="text" name="otp" id="otpInput" maxlength="6" required placeholder="000000" inputmode="numeric" autocomplete="one-time-code"
+                            class="w-full text-center py-5 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-4 focus:ring-amber-500/5 focus:border-amber-500 outline-none transition-all font-black text-3xl tracking-[0.5em] text-slate-700 placeholder:text-slate-200">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-4 bg-amber-500 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-amber-100 hover:bg-slate-900 transition-all active:scale-95 group">
+                    Xác nhận mã
+                    <span class="inline-block transition-transform group-hover:translate-x-1 ml-1">→</span>
+                </button>
+            </form>
+
+            <div class="pt-8 border-t border-slate-50 text-center flex flex-col gap-2">
+                <button type="button" id="resendBtn" disabled class="text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-amber-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    Gửi lại mã <span id="countdown">(60s)</span>
+                </button>
+                <a href="/auth/forgot-password" class="text-[10px] font-bold text-slate-300 hover:text-slate-500 transition-colors uppercase tracking-widest italic">Sai Email? Quay lại</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const countdownEl = document.getElementById('countdown');
+    const resendBtn = document.getElementById('resendBtn');
+    const otpInput = document.getElementById('otpInput');
+    const emailInput = document.getElementById('emailInput');
+    let timeLeft = 60;
+
+    function updateCountdown() {
+        if (timeLeft > 0) {
+            timeLeft--;
+            countdownEl.textContent = `(${timeLeft}s)`;
+            setTimeout(updateCountdown, 1000);
+        } else {
+            countdownEl.textContent = '';
+            resendBtn.disabled = false;
+        }
+    }
+
+    updateCountdown();
+
+    resendBtn.addEventListener('click', async () => {
+        resendBtn.disabled = true;
+        timeLeft = 60;
+        countdownEl.textContent = `(${timeLeft}s)`;
+        
+        try {
+            const response = await fetch('/auth/resend-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: emailInput.value })
+            });
+            const data = await response.json();
+            alert(data.message);
+            if (data.success) {
+                updateCountdown();
+            } else {
+                timeLeft = 0;
+                resendBtn.disabled = false;
+            }
+        } catch (err) {
+            alert('Lỗi khi kết nối server.');
+            timeLeft = 0;
+            resendBtn.disabled = false;
+        }
+    });
+
+    // Auto focus OTP input
+    otpInput.focus();
+</script>
+
+<%- include('../partials/footer') %>

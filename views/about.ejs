@@ -1,0 +1,116 @@
+
+<%- include('partials/header') %>
+
+<style>
+    .hero-gradient {
+        background: radial-gradient(circle at top right, rgba(79, 70, 229, 0.05), transparent),
+                    radial-gradient(circle at bottom left, rgba(56, 189, 248, 0.05), transparent);
+    }
+</style>
+
+<div class="min-h-screen hero-gradient font-sans">
+
+    <!-- HERO -->
+    <section class="max-w-5xl mx-auto px-6 pt-64 pb-32 text-center">
+        <div class="space-y-8">
+
+            <h1 class="text-6xl md:text-8xl font-black text-slate-900 tracking-tighter leading-[1.05]">
+                Khai phóng Sức mạnh 
+                <span class="text-indigo-600">Thực nghiệm.</span>
+            </h1>
+
+            <div class="max-w-2xl mx-auto pt-4 relative">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1 bg-indigo-100/50"></div>
+                <p class="text-xl md:text-2xl text-slate-500 font-medium leading-relaxed pt-8">
+                    Xóa nhòa mọi giới hạn vật lý để mang tri thức khoa học đến gần hơn với trải nghiệm và trí tò mò của học sinh Việt Nam.
+                </p>
+            </div>
+
+            <div class="flex justify-center gap-4 pt-6">
+                <a href="/" class="btn btn-primary px-8 py-4 text-lg rounded-xl shadow">
+                    Bắt đầu Thực hành
+                </a>
+                <a href="/quizzes" class="px-8 py-4 text-lg font-bold text-slate-600 border rounded-xl hover:bg-slate-50">
+                    Làm kiểm tra
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CONTENT -->
+    <section class="bg-white py-24 border-y border-slate-100">
+        <div class="max-w-4xl mx-auto px-6 text-center space-y-12">
+
+            <h2 class="text-4xl md:text-6xl font-black text-slate-900 leading-[1.1] tracking-tight">
+                Khi bốn bức tường <br> 
+                không còn là giới hạn.
+            </h2>
+
+            <div class="max-w-3xl mx-auto space-y-10 py-10">
+                <blockquote class="text-2xl md:text-3xl font-bold text-slate-800 leading-relaxed border-l-8 border-indigo-600 pl-8 text-left italic-none">
+                    "Tại sao học sinh chúng ta phải học khoa học qua những mô hình tĩnh lặng trên giấy?"
+                </blockquote>
+                
+                <div class="space-y-8 text-lg md:text-xl text-slate-500 font-medium leading-[1.8] text-center">
+                    <p>
+                        Dự án Phòng Thí Nghiệm Ảo ra đời từ câu hỏi nhức nhối đó. Chúng tôi tạo ra môi trường nơi các em có thể tự do thử nghiệm, dũng cảm sai lầm và không ngừng khám phá mà không có bất kỳ rào cản vật lý nào.
+                    </p>
+                    <p>
+                        Công nghệ mô phỏng chính là chìa khóa để kiến tạo sự bình đẳng. Một phòng thí nghiệm hàng tỷ đồng giờ đây có thể nằm gọn trong trình duyệt, sẵn sàng phục vụ trí tò mò của mọi học sinh Việt Nam.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CORE VALUES -->
+    <section class="max-w-6xl mx-auto px-6 py-24">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-black text-slate-900">Ba nguyên tắc nền tảng</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+
+            <!-- CARD 1 -->
+            <div class="p-10 bg-white rounded-3xl border text-center">
+                <div class="text-4xl mb-4">🌍</div>
+                <h3 class="font-black text-lg mb-2">Bình đẳng Số</h3>
+                <p class="text-sm text-slate-500">
+                    Mọi học sinh đều có quyền tiếp cận tri thức như nhau.
+                </p>
+            </div>
+
+            <!-- CARD 2 (MAIN) -->
+            <div class="p-12 bg-slate-900 text-white rounded-3xl text-center scale-105 shadow-2xl">
+                <div class="text-4xl mb-4">🛡️</div>
+                <h3 class="font-black text-lg mb-2">An toàn Tuyệt đối</h3>
+                <p class="text-sm opacity-80">
+                    Loại bỏ mọi rủi ro vật lý. Học sinh được tự do thử nghiệm không giới hạn.
+                </p>
+            </div>
+
+            <!-- CARD 3 -->
+            <div class="p-10 bg-white rounded-3xl border text-center">
+                <div class="text-4xl mb-4">🚀</div>
+                <h3 class="font-black text-lg mb-2">Đam mê Khám phá</h3>
+                <p class="text-sm text-slate-500">
+                    Khơi dậy sự tò mò và tinh thần khoa học trong mỗi học sinh.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="max-w-4xl mx-auto px-6 pb-24 text-center space-y-10">
+        <h2 class="text-3xl md:text-5xl font-black text-slate-900 leading-tight">
+            Hãy cùng chúng tôi <br> tạo nên điều khác biệt.
+        </h2>
+
+    </section>
+
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,12 @@
+<%- include('partials/header') %>
+
+<section class="max-w-xl mx-auto my-32 px-6 text-center animate-fade-in">
+    <div class="glass-card p-20 shadow-2xl">
+        <div class="text-8xl mb-12 drop-shadow-2xl opacity-80">🔭</div>
+        <h1 class="text-6xl font-black text-slate-900 mb-6 tracking-tight"><%= title %></h1>
+        <p class="text-xl text-text-muted mb-12 font-medium"><%= typeof message !== 'undefined' ? message : 'Có lỗi gì đó đã xảy ra!' %></p>
+        <a href="/" class="btn btn-primary px-12 py-4 shadow-xl shadow-indigo-100">Quay về trang chủ</a>
+    </div>
+</section>
+
+<%- include('partials/footer') %>

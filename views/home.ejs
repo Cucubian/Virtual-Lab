@@ -1,0 +1,59 @@
+<%- include('partials/header') %>
+
+<!-- Background Decoration -->
+<div class="fixed inset-0 -z-10 pointer-events-none opacity-30 overflow-hidden">
+    <div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-indigo-200 blur-[150px] rounded-full"></div>
+    <div class="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-purple-100 blur-[150px] rounded-full"></div>
+</div>
+
+<section class="max-w-7xl mx-auto px-6 pt-20 pb-16">
+    <div class="glass-card relative overflow-hidden p-12 md:p-24 text-center transform shadow-[0_50px_100px_-20px_rgba(79,70,229,0.12)]">
+        <!-- Abstract shape decoration -->
+        <div class="absolute -top-24 -left-24 w-64 h-64 bg-indigo-50 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-pulse"></div>
+        <div class="absolute -bottom-24 -right-24 w-64 h-64 bg-purple-50 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-pulse" style="animation-delay: 2s"></div>
+        
+        <div class="relative z-10 space-y-8">
+            <h1 class="text-6xl md:text-8xl font-black tracking-tight bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-700 bg-clip-text text-transparent leading-[1.1]">
+                Nền tảng <br/> <span class="text-primary">Thí nghiệm Ảo</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-text-muted max-w-3xl mx-auto leading-relaxed">
+                Khám phá hàng chục mô phỏng khoa học sinh động hoàn toàn miễn phí dành cho học sinh THCS.
+            </p>
+            <div class="pt-8 flex flex-wrap justify-center gap-4">
+                <a href="#subjects" class="btn btn-primary px-10 py-5 text-lg group">Bắt đầu khám phá <span class="group-hover:translate-x-2 transition-transform">→</span></a>
+                <a href="/quizzes" class="btn bg-white text-slate-800 border border-slate-200 hover:bg-slate-50 shadow-sm px-10">Làm thử trắc nghiệm</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="subjects" class="container py-24">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 px-4">
+        <div class="space-y-4">
+            <h2 class="text-4xl md:text-5xl font-black">Danh mục môn học</h2>
+            <p class="text-text-muted text-lg max-w-xl">Hệ thống bài học được thiết kế sát với chương trình phổ thông</p>
+        </div>
+        <div class="h-0.5 flex-grow bg-slate-200/50 mx-10 hidden md:block"></div>
+        <div class="flex gap-2 text-2xl">📚 🔬 🧪 🧬</div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
+        <% subjects.forEach((subject, index) => { %>
+            <div class="subject-card glass-card hover-lift group flex flex-col items-center justify-between p-12 text-center animate-fade-in" style="animation-delay: <%= index * 0.1 %>s">
+                <div class="w-32 h-32 bg-gradient-to-br from-indigo-50 to-white rounded-[40px] shadow-sm flex items-center justify-center mb-10 text-6xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 border border-slate-100">
+                    <span class="subject-big-icon drop-shadow-md"><%= subject.icon %></span>
+                </div>
+                <div class="space-y-4 mb-10">
+                    <h3 class="text-3xl font-black text-slate-800"><%= subject.name %></h3>
+                    <p class="text-text-muted leading-relaxed line-clamp-3"><%= subject.description %></p>
+                </div>
+                <a href="/subject/<%= subject.id %>" class="btn btn-primary w-full group/btn relative overflow-hidden">
+                    <span class="relative z-10">Truy cập ngay</span>
+                    <div class="absolute inset-0 bg-white/10 translate-y-full group-hover/btn:translate-y-0 transition-transform"></div>
+                </a>
+            </div>
+        <% }); %>
+    </div>
+</section>
+
+<%- include('partials/footer') %>

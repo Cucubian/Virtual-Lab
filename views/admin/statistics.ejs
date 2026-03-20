@@ -1,0 +1,113 @@
+<%- include('../partials/header') %>
+
+<div class="main-container min-h-screen bg-[#f8fafc] py-12">
+    <div class="max-w-7xl mx-auto px-6">
+        
+        <!-- Header Section -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
+            <div>
+                <nav class="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">
+                    <a href="/admin/dashboard" class="hover:text-amber-500 transition-colors">Admin</a>
+                    <span>/</span>
+                    <span class="text-slate-600">Thống kê điểm số</span>
+                </nav>
+                <h1 class="text-4xl font-black text-slate-900 tracking-tight">Bảng <span class="text-amber-500">Thành tích</span></h1>
+            </div>
+            <a href="/admin/dashboard" class="px-6 py-3 bg-white border border-slate-100 rounded-xl shadow-sm hover:shadow-md transition-all text-sm font-bold text-slate-600 flex items-center gap-2">
+                <span>←</span> Quay lại Dashboard
+            </a>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Tổng lượt làm bài</div>
+                <div class="text-3xl font-black text-slate-800"><%= (locals.stats && stats.total) || 0 %> <small class="text-sm font-bold text-slate-300">lượt</small></div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Điểm trung bình hệ thống</div>
+                <div class="text-3xl font-black text-emerald-500"><%= (locals.stats && stats.avgScore) || 0 %>%</div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Trạng thái hệ thống</div>
+                <div class="flex items-center gap-2 text-sm font-bold text-slate-600">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Đang hoạt động
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Card -->
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+
+            <!-- Table -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left whitespace-nowrap">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-100">
+                            <th class="px-8 py-4 text-[11px] font-black text-slate-400 uppercase tracking-wider">Học sinh</th>
+                            <th class="px-8 py-4 text-[11px] font-black text-slate-400 uppercase tracking-wider">Nội dung bài học</th>
+                            <th class="px-8 py-4 text-[11px] font-black text-slate-400 uppercase tracking-wider">Kết quả</th>
+                            <th class="px-8 py-4 text-[11px] font-black text-slate-400 uppercase tracking-wider">Điểm số</th>
+                            <th class="px-8 py-4 text-[11px] font-black text-slate-400 uppercase tracking-wider text-right">Thời gian</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <% if (history && history.length > 0) { %>
+                            <% history.forEach(item => { %>
+                                <tr class="hover:bg-slate-50/50 transition-colors text-sm">
+                                    <td class="px-8 py-5">
+                                        <div class="font-bold text-slate-800"><%= item.full_name || item.username %></div>
+                                        <div class="text-[10px] font-bold text-slate-400">@<%= item.username %></div>
+                                    </td>
+                                    <td class="px-8 py-5">
+                                        <div class="flex items-center gap-2 font-bold text-indigo-600">
+                                            <span>🔬</span> <%= item.experiment_title %>
+                                        </div>
+                                    </td>
+                                    <td class="px-8 py-5">
+                                        <span class="px-3 py-1 bg-slate-100 text-slate-500 rounded-lg text-[10px] font-black border border-slate-200">
+                                            <%= item.correct_answers %> / <%= item.total_questions %>
+                                        </span>
+                                    </td>
+                                    <td class="px-8 py-5">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-2 h-2 rounded-full <%= item.score >= 80 ? 'bg-emerald-500' : (item.score >= 50 ? 'bg-amber-500' : 'bg-rose-500') %>"></div>
+                                            <span class="font-black text-slate-800"><%= Math.round(item.score) %>%</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-8 py-5 text-right font-medium text-slate-400 text-xs">
+                                        <%= new Date(item.completed_at).toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="5" class="px-8 py-20 text-center text-slate-400 font-bold">Chưa có dữ liệu thành tích.</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination Bar -->
+            <% if (pagination.totalPages > 1) { %>
+                <div class="px-8 py-5 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                        Trang <span class="text-slate-900"><%= pagination.currentPage %></span> / <%= pagination.totalPages %>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <% if (pagination.hasPrev) { %>
+                            <a href="/admin/statistics?page=<%= pagination.currentPage - 1 %>" class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all">Trước</a>
+                        <% } %>
+                        
+                        <% if (pagination.hasNext) { %>
+                            <a href="/admin/statistics?page=<%= pagination.currentPage + 1 %>" class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all">Sau</a>
+                        <% } %>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>
