@@ -2,10 +2,10 @@
   "name": "virtual-science-lab",
   "version": "1.0.0",
   "description": "Nền tảng giáo dục mô phỏng các thí nghiệm khoa học cho học sinh trung học cơ sở.",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node app.js",
-    "watch": "node --watch app.js",
+    "start": "node index.js",
+    "watch": "node --watch index.js",
     "dev": "npx tailwindcss -i ./public/css/input.css -o ./public/css/style.css --watch",
     "build:css": "npx tailwindcss -i ./public/css/input.css -o ./public/css/style.css",
     "test": "echo \"Error: no test specified\" && exit 1"
